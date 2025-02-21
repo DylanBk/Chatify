@@ -1,0 +1,8 @@
+# environment
+
+/.venv
+
+# misc
+
+**/__pycache__
+**/*.log
