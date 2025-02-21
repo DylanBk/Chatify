@@ -1,0 +1,104 @@
+/*
+attributes are ordered alphabetically but also grouped by related property
+for example;
+
+background: var(--blue-100);
+padding: 1rem;
+border-radius: 0.675rem;
+margin: 1.25rem
+
+background comes before padding alphabetically,
+but border-radius should be before padding,
+however, the box model dictates padding -> border -> margin,
+so it is grouped with padding and margin
+*/
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --off-black: #333;
+    --grey-000: #FAF9F6;
+    --grey-100: #eee;
+    --grey-200: #ddd;
+    --grey-300: #d9d9d9;
+    --red-100: #D22B2B;
+    --red-200: #b11a1a;
+    --blue-100: #6495ED;
+    --blue-200: #3455cd;
+    --blue-300: #6495ed33;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    background: var(--grey-000);
+    width: 100%;
+}
+
+input::placeholder {
+    color: var(--off-black);
+}
+
+
+.card {
+    background: var(--grey-100);
+    box-shadow: 0 0 10px 0 rgb(0, 0, 0, 0.25);
+    padding: 1.5rem;
+    border-radius: 0.675rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form__input--txt {
+    display: flex;
+    flex-direction: column;
+}
+.form__input--txt label {
+    font-size: 1rem;
+}
+.form__input--txt input {
+    background: var(--grey-300);
+    padding: 0.5rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+}
+.form__input--txt input:-webkit-autofill, /* remove autofill background colour on form input */
+.form__input--txt input:-webkit-autofill:hover, 
+.form__input--txt input:-webkit-autofill:focus, 
+.form__input--txt input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 100px var(--grey-300) inset;
+}
+
+.btn--primary {
+    background: var(--blue-100);
+    padding: 1rem 2rem;
+    border-radius: 0.4rem;
+    color: white;
+    text-align: center;
+    transition: all 0.3s;
+}
+.btn--primary:hover {
+    background-color: var(--blue-200);
+}
+
+.btn--secondary {
+    background: none;
+    box-shadow: 0 0 0 2px var(--blue-100) inset;
+    color: var(--blue-100);
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    transition: all 0.3s;
+}
+.btn--secondary:hover {
+    background: var(--blue-200);
+    box-shadow: 0 0 0 2px var(--blue-200) inset;
+    color: white;
+}
