@@ -46,6 +46,45 @@ input::placeholder {
     color: var(--off-black);
 }
 
+/* ::-webkit-scrollbar { 
+    width: 0.25rem;
+    background: var(--grey-300);
+}
+
+::-webkit-scrollbar-thumb {
+    background: grey;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--blue-100);
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-200);
+} */
+
+
+
+/* modern looking scrollbar */
+::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--grey-300);
+    border-radius: 0.25rem;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--grey-100);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--grey-200);
+}
+::-webkit-scrollbar-thumb:active {
+    background: var(--grey-200);
+}
+
 
 .card {
     background: var(--grey-100);

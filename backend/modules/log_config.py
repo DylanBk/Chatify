@@ -35,7 +35,9 @@ def log_error(message:str, error:Exception):
     error = ServerError(message, error)
     logger.error(error)
 
-log_handler = RotatingFileHandler('./logs/server-errors.log', maxBytes=1_000_000, backupCount=3)
+    return error.id
+
+log_handler = RotatingFileHandler('./backend/logs/server-errors.log', maxBytes=1_000_000, backupCount=3)
 log_handler.setLevel(logging.ERROR)
 
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -79,7 +81,7 @@ def log_event(message:str, event:any):
     event = ServerEvent(message, event)
     logger.info(event)
 
-event_handler = RotatingFileHandler('./logs/server-events.log', maxBytes=1_000_000, backupCount=3)
+event_handler = RotatingFileHandler('./backend/logs/server-events.log', maxBytes=1_000_000, backupCount=3)
 event_handler.setLevel(logging.INFO)
 
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')

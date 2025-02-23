@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import show from "../../assets/icons/show.svg";
 import hide from "../../assets/icons/hide.svg";
@@ -10,6 +10,7 @@ export default function Login() {
         password: '',
     });
     const [error, setError] = useState('');
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -39,10 +40,11 @@ export default function Login() {
                 body: JSON.stringify(formData)
             })
             .then(res => res.json())
+            console.log(res)
 
             if (res.message) {
-                window.location.href = '/chat';
                 document.cookie = 'loggedIn=true;'; //TODO: replace with server cookie
+                navigate('/chat')
             } else {
                 setError(res.error)
             }

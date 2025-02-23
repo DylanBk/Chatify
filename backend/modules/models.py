@@ -1,5 +1,8 @@
-from sqlalchemy import Column, String, Integer, ForeignKey
+import datetime
+import os
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 import time
 import uuid
 
@@ -17,11 +20,14 @@ class User(base):
     password = Column(String)
     role = Column(String, default="User")
     pfp = Column(String)
-    active = Column(Integer) # 0 = offline, 1 = online
+    active = Column(Boolean) # 0 = offline, 1 = online
     status = Column(String)
     theme = Column(String, ForeignKey('Themes.id'))
 
-    def __init__(self, email:str, username:str, password:bytes, role:str|None):
+    rel_user_theme = relationship("Theme", back_populates="rel_theme_user")
+    rel_user_messages = relationship("Message", back_populates="rel_message_sender")
+
+    def __init__(self, email:str, username:str, password:bytes, role=None):
         """
         Constructor for the User class.
         Parameters:
@@ -35,18 +41,22 @@ class User(base):
         self.email = email
         self.password = password
 
+        pfp_path = os.path.join(os.path.dirname(__file__), '../media/account.webp')
+        with open(pfp_path, 'rb') as f:
+            self.pfp = f.read()
+
         if role: # accounts with permissions can be directly created
             self.role = role # by passing in the appropriate role
 
 class UserRelationship(base):
     """
-    UserRelationship class to store user
+    UserRelationship class to store user relationships.
     """
     __tablename__ = "UserRelationships"
 
     id = Column(String, primary_key=True, unique=True)
-    id_1 = Column(Integer, ForeignKey('Users.id'))
-    id_2 = Column(Integer, ForeignKey('Users.id'))
+    id_1 = Column(String, ForeignKey('Users.id'))
+    id_2 = Column(String, ForeignKey('Users.id'))
     status = Column(Integer)
     # 0 = friends
     # 1 = user1 to user2 pending
@@ -73,14 +83,36 @@ class Chat(base):
     __tablename__ = "Chats"
 
     id = Column(String, primary_key=True, unique=True)
-    id_1 = Column(Integer, ForeignKey('Users.id'))
-    id_2 = Column(Integer, ForeignKey('Users.id'))
-    messages = Column(String)
+    id_1 = Column(String, ForeignKey('Users.id'))
+    id_2 = Column(String, ForeignKey('Users.id'))
+
+    rel_chat_messages = relationship("Message", back_populates="rel_message_chat")
 
     def __init__(self, id_1, id_2):
         self.id = f"ch/{id_1}/{id_2}"
         self.id_1 = id_1
         self.id_2 = id_2
+
+class Message(base):
+    __tablename__ = "Messages"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    sender_id = Column(String, ForeignKey('Users.id'))
+    sender_username = Column(String)
+    chat = Column(String, ForeignKey('Chats.id'))
+    content = Column(String)
+    timestamp = Column(String, default=datetime.datetime.utcnow)
+
+    rel_message_sender = relationship("User", back_populates="rel_user_messages")
+    rel_message_chat = relationship("Chat", back_populates="rel_chat_messages")
+
+    def __init__(self, sender_id, sender_username, chat, content, timestamp):
+        print('\n', sender_id, sender_username, chat, content, timestamp, '\n')
+        self.sender_id = sender_id
+        self.sender_username = sender_username
+        self.chat = chat
+        self.content = content
+        self.timestamp = timestamp
 
 class Theme(base):
     __tablename__ = "Themes"
@@ -93,9 +125,10 @@ class Theme(base):
     secondary = Column(String)
     danger = Column(String)
 
+    rel_theme_user = relationship("User", back_populates="rel_user_theme")
+
     def __init__(self, name, background, foreground, primary, secondary, danger):
         unix = time.time()
-        print(unix)
         self.id = f"th/{name}/{unix}"
         self.name = name
         self.background = background

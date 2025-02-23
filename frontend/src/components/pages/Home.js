@@ -1,7 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import {React, useEffect} from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import cookieCheck from "../../utils/cookieCheck";
 
 export default function Home() {
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (cookieCheck('loggedIn=true')) {
+            navigate('/chat')
+        }
+    }, [navigate]);
+
     return (
         <main className="flex flex-col items-center">
             <h1 className="flex flex-col items-center m-auto mt-8 text-5xl">Welcome To <span className="text-7xl">Chatify</span></h1>
